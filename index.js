@@ -554,6 +554,30 @@
                 // Check for collisions.
                 var collision = hasObstacles &&
                     checkForCollision(this.horizon.obstacles[0], this.tRex);
+                
+                // @rakkaalhazimi changes
+                var trexObstacleDistance = 0
+                var obstacleWidth = 0
+                var obstacleHeight = 0
+                if (this.horizon.obstacles[0] != undefined) {
+                    // Obstacle width based on its CollisionBoxes(x, y, w, h)
+                    obstacleWidth = this.horizon.obstacles[0].width;
+                    obstacleHeight = this.horizon.obstacles[0].typeConfig.height;
+
+                    // Distance
+                    var obstacleXPos = this.horizon.obstacles[0].xPos;
+                    var trexXpos = this.tRex.xPos;
+                    trexObstacleDistance = obstacleXPos - trexXpos;
+                }
+                
+                // Speed
+                var gameSpeed = Math.round(this.currentSpeed * 100) / 100;
+
+                var status_template = `distance: ${trexObstacleDistance}, speed: ${gameSpeed}, width: ${obstacleWidth}, height: ${obstacleHeight}`
+
+                console.log(status_template);
+                
+                // end @rakkaalhazimi changes
 
                 if (!collision) {
                     this.distanceRan += this.currentSpeed * deltaTime / this.msPerFrame;
