@@ -1,4 +1,4 @@
-import { runner } from "./index.js";
+import { runner } from "../index.js";
 
 
 var tRexDist = 0;
@@ -83,4 +83,4 @@ function startReport(event) {
   }
 }
 
-reportStarter = setInterval(reportEnv, 100);
+// reportStarter = setInterval(reportEnv, 100);

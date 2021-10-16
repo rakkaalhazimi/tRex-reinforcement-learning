@@ -1,0 +1,22 @@
+{
+  "name": "Dino-runner-offline",
+  "version": "1.0.0",
+  "description": "the trex runner game extracted from chrome offline err page.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakkaalhazimi/t-rex-runner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rakkaalhazimi/t-rex-runner/issues"
+  },
+  "homepage": "https://github.com/rakkaalhazimi/t-rex-runner#readme"
+}
