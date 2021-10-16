@@ -1,4 +1,4 @@
-import { runner } from "../index.js";
+import { runner } from "./index.js";
 
 
 var tRexDist = 0;

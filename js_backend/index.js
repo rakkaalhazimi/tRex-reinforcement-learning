@@ -554,49 +554,6 @@
                 // Check for collisions.
                 var collision = hasObstacles &&
                     checkForCollision(this.horizon.obstacles[0], this.tRex);
-                
-                // @rakkaalhazimi changes
-                var groundYPos = this.dimensions.HEIGHT - this.config.BOTTOM_PAD
-                var trexObstacleDistance = 0
-                var obstacleWidth = 0
-                var obstacleGap = 0
-                var reward = 1 / 100
-                if (this.horizon.obstacles[0] != undefined) {
-                    // Obstacle width
-                    obstacleWidth = this.horizon.obstacles[0].width;
-                    
-                    // Obstacle Gap
-                    let obstacleHeight = this.horizon.obstacles[0].typeConfig.height;
-                    let obstacleYPos = this.horizon.obstacles[0].yPos;
-
-                    obstacleGap = groundYPos - (obstacleYPos + obstacleHeight);
-                    
-                    // Distance
-                    let obstacleXPos = this.horizon.obstacles[0].xPos;
-                    let trexXpos = this.tRex.xPos;
-                    trexObstacleDistance = (obstacleXPos - trexXpos) / 1000;
-                }
-                
-                // Speed
-                var gameSpeed = Math.round(this.currentSpeed * 100) / 100;
-                
-                if (collision) {
-                    reward -= 1 / 10
-                }
-
-                var status_template = 
-                `
-                distance: ${trexObstacleDistance},
-                speed: ${gameSpeed}, 
-                width: ${obstacleWidth}, 
-                Vgap: ${obstacleGap},
-                reward: ${reward},
-                `
-                var debug_template = `canvas_height: ${this.dimensions.HEIGHT}`
-
-                // console.log(status_template);
-                
-                // end @rakkaalhazimi changes
 
                 if (!collision) {
                     this.distanceRan += this.currentSpeed * deltaTime / this.msPerFrame;
