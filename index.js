@@ -594,7 +594,7 @@
                 `
                 var debug_template = `canvas_height: ${this.dimensions.HEIGHT}`
 
-                console.log(status_template);
+                // console.log(status_template);
                 
                 // end @rakkaalhazimi changes
 
@@ -2750,9 +2750,11 @@
     };
 })();
 
-
+var runner
 function onDocumentLoad() {
-    new Runner('.interstitial-wrapper');
+    runner = new Runner('.interstitial-wrapper');
 }
+
+export {runner};
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
