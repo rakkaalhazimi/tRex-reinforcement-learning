@@ -1,2 +1,5 @@
 .DS_Store
+chromedriver.exe
+venv/
+__pycache__/
 node_modules/

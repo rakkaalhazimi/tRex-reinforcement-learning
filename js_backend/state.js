@@ -56,15 +56,12 @@ function reportEnv() {
     vgap = getVGap();
   }
 
-  var report =
-  `
-  distance: ${distance},
-  speed: ${speed}, 
-  width: ${width}, 
-  Vgap: ${vgap},
-  reward: ${reward},
-  collide: ${runner.crashed}
-  `
+  var report = `{'distance': ${distance}, 
+  'speed': '${speed}', 
+  'width': '${width}', 
+  'vgap': '${vgap}', 
+  'reward': '${reward}', 
+  'collide': '${runner.crashed}'}`
 
   if (runner.playing) {
     console.log(report);
@@ -79,8 +76,8 @@ function reportEnv() {
 
 function startReport(event) {
   if ([" ", "ArrowUp"].includes(event.key)) {
-    reportStarter = setInterval(reportEnv, 1000);
+    reportStarter = setInterval(reportEnv, 100);
   }
 }
 
-// reportStarter = setInterval(reportEnv, 100);
+reportStarter = setInterval(reportEnv, 100);
