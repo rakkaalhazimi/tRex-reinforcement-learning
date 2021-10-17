@@ -1,46 +1,44 @@
 import { runner } from "./index.js";
 
 // Parameters
+// ========================
 var tRexDist = 0;
 var obsWidth = 0;
 var obsVGap = 0;
 var reward = 1;
 
 
-function getDistance() {
-  // Distance between trex and obstacle
+// Environtment state getter
+// =========================
+
+// Obstacle width
+const getObsWidth = () => runner.horizon.obstacles[0].width;
+
+// Current game speed
+const getSpeed = () => Math.round(runner.currentSpeed * 100) / 100;
+
+// Set reward based on state
+const getReward = () => runner.crashed ? -1 / 10 : 1 / 100;
+
+// Distance between trex and obstacle
+const getDistance = () => {
   let tRexPos = runner.tRex.xPos;
   let obsXPos = runner.horizon.obstacles[0].xPos;
-
   return obsXPos - tRexPos;
 }
 
-function getVGap() {
-  // Vertical gap between ground and obstacle
+// Vertical gap between ground and obstacle
+const getVGap = () => {
   const GROUND_YPOS = runner.dimensions.HEIGHT - runner.config.BOTTOM_PAD;
   let obstacleHeight = runner.horizon.obstacles[0].typeConfig.height;
   let obstacleYPos = runner.horizon.obstacles[0].yPos;
-
   return GROUND_YPOS - (obstacleHeight + obstacleYPos)
 }
 
-function getObsWidth() {
-  // Obstacle width
-  return runner.horizon.obstacles[0].width
-}
-
-function getSpeed() {
-  // Current game speed
-  return Math.round(runner.currentSpeed * 100) / 100;
-}
-
-function getReward() {
-  // Set reward based on state
-  return runner.crashed ? -1 / 10 : 1 / 100;
-}
 
 
 // Environment Report
+// =========================
 var reportStarter
 
 function reportEnv() {
@@ -86,4 +84,5 @@ function startReport(event) {
 
 
 // Main function
+// =========================
 reportStarter = setInterval(reportEnv, 100);
