@@ -4,10 +4,9 @@ import keyboard
 
 # 3rd-party library
 import tensorflow as tf
-from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
+from init._selenium import driver
 from py_backend.preprocessor import list_to_tensor
 
 PARAM_NUM = 6
@@ -17,11 +16,7 @@ EPISODES = 10
 logmsg = re.compile(r'"(.*)"')
 numre = re.compile(r"[0-9\.]+")
 
-# Selenium setup
-capabilities = DesiredCapabilities.CHROME
-capabilities["goog:loggingPrefs"] = {"browser": "ALL"}
-driver = webdriver.Chrome(desired_capabilities=capabilities)
-driver.get("http://127.0.0.1:5500/index.html")
+
 
 # Keyboard Event
 keyboard.press_and_release("space")
