@@ -36,10 +36,10 @@ function getSpeed() {
 
 function getReward() {
   // Set reward based on state
-  return runner.crashed ? -1 / 10: 1 / 100;
+  return runner.crashed ? -1 / 10 : 1 / 100;
 }
 
-// ===================================================================================
+
 
 var reportStarter
 
@@ -49,6 +49,7 @@ function reportEnv() {
   let vgap = 0;
   let speed = getSpeed();
   let reward = getReward()
+  let collide = runner.crashed ? 1 : 0;
 
   if (runner.horizon.obstacles[0] != undefined) {
     distance = getDistance();
@@ -56,22 +57,24 @@ function reportEnv() {
     vgap = getVGap();
   }
 
-  var report = `{'distance': ${distance}, 
-  'speed': '${speed}', 
-  'width': '${width}', 
-  'vgap': '${vgap}', 
-  'reward': '${reward}', 
-  'collide': '${runner.crashed}'}`
+  var report = `
+    distance: ${distance}, 
+    speed: ${speed}, 
+    width: ${width}, 
+    vgap: ${vgap}, 
+    reward: ${reward}, 
+    collide: ${collide}
+  `
 
   if (runner.playing) {
     console.log(report);
-
+    
   } else if (runner.crashed) {
     console.log(report);
     clearInterval(reportStarter);                      // Clear interval
     window.addEventListener("keypress", startReport);  // Set event to start interval again
 
-  } else {};
+  } else { };
 }
 
 function startReport(event) {
