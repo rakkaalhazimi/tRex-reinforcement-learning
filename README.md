@@ -1,6 +1,6 @@
 # Description
 
-This is a prebuilt trex runner from [wayou](https://github.com/wayou) repo's in here [link](git@github.com:rakkaalhazimi/tRex-reinforcement-learning.git)
+The trex runner game is from [wayou](https://github.com/wayou) repo's in [here](https://github.com/wayou/t-rex-runner). What I do here is just adding the setup for reinforcement learning.
 
 ![chrome offline game cast](src/assets/screenshot.gif)
 
