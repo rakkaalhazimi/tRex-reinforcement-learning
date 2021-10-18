@@ -1,8 +1,9 @@
 # Std library
 import re
-import keyboard
+import contextlib
 
 # 3rd-party library
+import keyboard
 import tensorflow as tf
 
 # Local file
@@ -23,19 +24,18 @@ model = tf.keras.layers.Dense(2)
 
 def main_loop():
     step = 0
-    while step <= config.EPISODES:
-        for entry in driver.get_log("browser"):
-            message = logmsg.search(entry["message"])
+    with contextlib.closing(driver) as d:
+        while step <= config.EPISODES:
+            for entry in driver.get_log("browser"):
+                message = logmsg.search(entry["message"])
 
-            if message:
-                report_message = message.group(0)
-                current_state = numre.findall(report_message)
+                if message:
+                    report_message = message.group(0)
+                    current_state = numre.findall(report_message)
 
-                if len(current_state) == config.PARAM_NUM:
-                    print(current_state)
-                    step += 1
-    else:
-        driver.close()
+                    if len(current_state) == config.PARAM_NUM:
+                        print(current_state)
+                        step += 1
 
 if __name__ == '__main__':
     main_loop()
