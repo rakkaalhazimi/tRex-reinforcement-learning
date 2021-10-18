@@ -3,7 +3,6 @@ from typing import Tuple
 import tensorflow as tf
 from tensorflow.keras import layers
 
-
 class ActorCritic(tf.keras.Model):
     """Combined actor-critic network."""
 

@@ -1,9 +1,6 @@
-import tensorflow as tf
+import time
 
-from model.loss import huber_loss, compute_loss
-from model.preprocessor import (
-    parse_log, list_to_tensor, get_expected_return
-)
+import tensorflow as tf
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
@@ -41,11 +38,3 @@ def train_step(
     episode_reward = tf.math.reduce_sum(rewards)
 
     return episode_reward
-
-
-def run_episode():
-    pass
-
-
-def run_training_loop(log):
-    pass

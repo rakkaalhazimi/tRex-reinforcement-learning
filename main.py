@@ -1,42 +1,36 @@
 # Std library
+import os
 import re
 import contextlib
 
 # 3rd-party library
-import keyboard
+import numpy as np
 import tensorflow as tf
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
-from init.selenium_ import driver
 from utils import config
+from trainer.pre import Preprocessor
 
 
-# Regex for log message
-logmsg = re.compile(r'"(.*)"')
-numre = re.compile(r"[0-9\.]+")
+def start_selenium(server: str):
+    capabilities = DesiredCapabilities.CHROME
+    capabilities["goog:loggingPrefs"] = {"browser": "ALL"}
+    driver = webdriver.Chrome(desired_capabilities=capabilities)
+    driver.get(server)
+
+def start_seed(seed):
+    tf.random.set_seed(seed)
+    np.random.seed(seed)
 
 
-# Keyboard Event
-keyboard.press_and_release("space")
+class MainApp:
 
-# Model test
-model = tf.keras.layers.Dense(2)
-
-def main_loop():
-    step = 0
-    with contextlib.closing(driver) as d:
-        while step <= config.EPISODES:
-            for entry in driver.get_log("browser"):
-                message = logmsg.search(entry["message"])
-
-                if message:
-                    report_message = message.group(0)
-                    current_state = numre.findall(report_message)
-
-                    if len(current_state) == config.PARAM_NUM:
-                        print(current_state)
-                        step += 1
+    def __init__(self):
+        start_seed(config.SEED)
+        start_selenium(config.SERVER)
 
 if __name__ == '__main__':
-    main_loop()
+    app = MainApp()
     
