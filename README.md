@@ -1,47 +1,73 @@
-## t-rex-runner
+# Description
 
-the trex runner game extracted from chrome offline err page.
-
-see the [source](https://cs.chromium.org/chromium/src/components/neterror/resources/offline.js?q=t-rex+package:%5Echromium$&dr=C&l=7) from chromium
-
-
-[go and enjoy! :smile: ](http://wayou.github.io/t-rex-runner/)
+This is a prebuilt trex runner from [wayou](https://github.com/wayou) repo's in here [link](git@github.com:rakkaalhazimi/tRex-reinforcement-learning.git)
 
 ![chrome offline game cast](src/assets/screenshot.gif)
 
-## Interesting Forks/In Chinese, we call it 「花样玩法」
+This is my first time to build a reinforce learning project. Hope I can improve more, feel free to reproduce or modify the code.  
 
-- [vianroyal](https://github.com/vianroyal)/[t-rex-runner](https://github.com/vianroyal/t-rex-runner) [Kumamon runner](http://vianroyal.github.io/t-rex-runner/) 
-<br>
+# Author
+Rakka Alhazimi, October 2021
 
-![](src/assets/kumamon-runner.gif)
+# Requirements
+First, let me tell you the summary of what I was use here
 
-- [xkuga](https://github.com/xkuga)/[t-rex-runner](https://github.com/xkuga/t-rex-runner) [Hello KuGou](http://hellokugou.com/) 
-<br>
+Software:
+* Python v.3.7.7
+* OS : Windows 10
 
-![](src/assets/hello-kugou.gif)
+Python side-libraries:
+* Selenium
+* Keyboard
+* Tensorflow
 
-- [d-nery](https://github.com/d-nery/)/[t-rex-runner](https://github.com/d-nery/t-rex-runner) [Novas coisas](http://d-nery.github.io/t-rex-runner/) 
-<br>
+Web-Driver for Selenium:
+* Chrome
 
-![](src/assets/novas-coisas.gif)
+Any version is okay I guess, as long as the dependencies are fulfilled.  
 
-- [chirag64](https://github.com/chirag64)/[t-rex-runner-bot](https://github.com/chirag64/t-rex-runner-bot) [t-rex runner bot](https://chirag64.github.io/t-rex-runner-bot/) 
-<br>
+# Installation
+To make this project runs well on your machine, what you need to do is:
 
-![](src/assets/t-rex-runner-bot.gif)
+1. **Install Python** 
 
-- [19janil](https://github.com/19janil)/[t-rex-runner](https://github.com/19janil/t-rex-runner) [t-rex runner](https://19janil.github.io/t-rex-runner/) 
-<br>
+   After you install python, I suggest you to make an venv with command:  
+   ```
+   python -m venv [name]
+   ```
+   it'll build a folder in your directory right away, and to activate the env use:
+   ```
+   [name]\Scripts\activate.bat
+   ```
+   Then install all the dependencies using:
+   ```
+   pip install selenium, keyboard, tensorflow
+   ```
+   You can jump right into installing the dependencies if you already have python
+   and venv intact.
 
-![](src/assets/t-rex-runner-19janil.gif)
+2. **Install Chrome Web-browser**
+   
+   Chrome lets us to access console.log message from selenium. Therefore, Google Chrome
+   is a must.
 
-- [enthus1ast](https://github.com/enthus1ast)/[chromeTrip](https://github.com/enthus1ast/chromeTrip) [Chrome Trip by code0](https://code0.itch.io/chrome-trip) 
-<br>
+3. **Download webdriver for chrome** [here](https://sites.google.com/chromium.org/driver/)
+   
+   Match the driver with your Chrome version, after you download it, move the driver in
+   your current directory (repo directory).
 
-![](https://user-images.githubusercontent.com/13794470/37289691-964618be-260a-11e8-8c4a-6df04d6c490d.gif)
+4. **Start the code**
+   
+   The main file is `main.py`, run this file to start the program.
+   ```
+   python main.py
+   ```
 
-- [zouariste](https://github.com/zouariste)/[corona-runner](https://github.com/zouariste/corona-runner) [Corona runner](https://zouariste.github.io/corona-runner/) 
-<br>
+# Current Status
+It's still under-development though, so I'm afraid you couldn't do much here.
 
-![](https://raw.githubusercontent.com/zouariste/corona-runner/gh-pages/src/assets/corona-runner.gif)
+# Main Idea
+I try to make a reinforcement learning project with the in-game parameters. Other peoples are likely to snipe the screen pixel or taking multiple screenshot to gain the parameters of the state. Therefore, I would like to try different approach by peeking the game-code and get its variable. It's much faster and memory-friendly. The rest is still the same, the approach, model and etc.  
+
+I hope you can enjoy training your agent using the default model or you can also build your owns model to beat
+this game, any modification is welcomed. You can also change how the parameters is recorded inside the `src/js/watcher.js` file.
