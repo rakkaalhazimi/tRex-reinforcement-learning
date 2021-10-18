@@ -1,8 +1,9 @@
 import tensorflow as tf
 
 from model.loss import huber_loss, compute_loss
-from model.factory import get_expected_return
-from model.preprocessor import list_to_tensor
+from model.preprocessor import (
+    parse_log, list_to_tensor, get_expected_return
+)
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
