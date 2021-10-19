@@ -2,6 +2,7 @@
 import re
 import time
 import collections
+from typing import List
 
 # 3rd-party library
 import keyboard
@@ -12,6 +13,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
 from utils import config  # config must go first
+from trainer.reader import LogReader, TensorReader
 from trainer.model import ActorCritic
 from trainer.action import Action
 from trainer.train import train_step
@@ -42,35 +44,37 @@ class Agent:
     def __init__(self):
         self.model = ActorCritic(config.NUM_ACTS, config.UNITS)
         self.action = Action()
-        self.rewards = collections.deque(maxlen=config.MIN_CRITERION)
+        self.recorder = TensorReader()
 
     def move(self, probs: tf.Tensor):
         key = int(tf.random.categorical(probs, 1)[0, 0])
         self.action(key)
+        return key
+
+    def run(self, state: List[tf.Tensor], reward: tf.Tensor) -> None:
+        """Record state and do the action"""
+        state = tf.reshape(tf.stack(state, axis=0), (1, -1))
+        action_probs, critics = self.model(state)
+        
+        key = self.move(action_probs)
+
+        self.recorder.record(action_probs[0, key], critics, reward)
+
 
     def update(self):
+        # Fetch all recorded values
+        action_probs, values, rewards = self.recorder.get_tensor()
+        print(rewards)
+
+        # Update your model here
         print("Updating agent...")
-        time.sleep(5)
+
+        # Reset your record
+        self.recorder.reset()
+
+        # Start the game again after sleep
+        time.sleep(1)
         keyboard.press_and_release("space")
-
-
-class LogReader:
-
-    def __init__(self):
-        self.log_pattern = re.compile(r'"(.*)"')
-        self.params_pattern = re.compile(r"[0-9\.]+")
-
-    def read(self, message: str):
-        """
-        Parse browser log message, return list of params if the console doesn't contain
-        environment state. Otherwise return None.
-        """
-        searched = self.log_pattern.search(message)
-        if searched:
-            numlist = self.params_pattern.findall(searched.group(0))
-            return numlist if len(numlist) >= config.PARAM_NUM else None
-        return None
-
 
 
 
@@ -94,11 +98,9 @@ class MainApp:
                 if params:
                     # Record and process parameters
                     *state, reward, crash = list_to_tensor(params)
-                    state = tf.reshape(tf.stack(state, axis=0), (1, -1))
                     
-                    # Agent take an action
-                    action_probs, _ = self.agent.model(state)
-                    self.agent.move(action_probs)
+                    # Agent will record the state and take an action
+                    self.agent.run(state, reward)
 
                     if crash:
                         episode += 1
