@@ -13,10 +13,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
 from utils import config  # config must go first
-from trainer.reader import LogReader, TensorReader
-from trainer.model import ActorCritic
-from trainer.action import Action
-from trainer.train import train_step
+from trainer.train import Trainer
 
 
 def start_seed(seed: int):
@@ -32,81 +29,39 @@ def start_selenium(server: str):
     driver.get(server)
     return driver
 
-def list_to_tensor(seq: list):
-    """Convert all values inside list to tf.Tensor"""
-    seq = [float(num) for num in seq]
-    return tf.constant(seq, dtype=tf.float32)
-
-
-
-class Agent:
-
-    def __init__(self):
-        self.model = ActorCritic(config.NUM_ACTS, config.UNITS)
-        self.action = Action()
-        self.recorder = TensorReader()
-
-    def move(self, probs: tf.Tensor):
-        key = int(tf.random.categorical(probs, 1)[0, 0])
-        self.action(key)
-        return key
-
-    def run(self, state: List[tf.Tensor], reward: tf.Tensor) -> None:
-        """Record state and do the action"""
-        state = tf.reshape(tf.stack(state, axis=0), (1, -1))
-        action_probs, critics = self.model(state)
-        
-        key = self.move(action_probs)
-
-        self.recorder.record(action_probs[0, key], critics, reward)
-
-
-    def update(self):
-        # Fetch all recorded values
-        action_probs, values, rewards = self.recorder.get_tensor()
-        print(rewards)
-
-        # Update your model here
-        print("Updating agent...")
-
-        # Reset your record
-        self.recorder.reset()
-
-        # Start the game again after sleep
-        time.sleep(1)
-        keyboard.press_and_release("space")
-
-
 
 class MainApp:
+    """Main application of class, start the application by instantiating this class"""
 
     def __init__(self):
+        # Initiate seed and chrome webdriver
         start_seed(config.SEED)
         self.driver = start_selenium(config.SERVER)
-        self.log_reader = LogReader()
-        self.agent = Agent()
+        self.trainer = Trainer(self.driver)
 
+        # Run application loop after the preparation is complete
         self.loop()
 
-    def loop(self):
-        episode = 0
+    def start_game(self):
+        """Trigger dino game with space button"""
         keyboard.press_and_release("space")
-        
-        while episode <= config.EPISODES:
-            for entry in self.driver.get_log("browser"):
-                params = self.log_reader.read(entry["message"])
-                if params:
-                    # Record and process parameters
-                    *state, reward, crash = list_to_tensor(params)
-                    
-                    # Agent will record the state and take an action
-                    self.agent.run(state, reward)
 
-                    if crash:
-                        episode += 1
-                        self.agent.update()
+    def loop(self):
+        """Define what happens on the whole of application runtime"""
+
+        for episode in range(config.EPISODES):
+            self.start_game()
+            reward = self.trainer.train_batch()
+            print("Finish episode {} with rewards: {}".format(episode, reward))
+
+            # Pause before starting, so that the app has enough time to press space
+            time.sleep(2)
+            
 
         self.driver.close()
+
+
+
 
 if __name__ == '__main__':
     app = MainApp()

@@ -1,13 +1,21 @@
 from __main__ import config
+from typing import List
 
 import tensorflow as tf
+
+from .reader import LogReader, TensorReader
+from .agent import Agent
 
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
-def run_episode(state):
-    ...
+
+def list_to_tensor(seq: List[str]):
+    """Convert all values inside list to tf.Tensor"""
+    seq = [float(num) for num in seq]
+    return tf.constant(seq, dtype=tf.float32)
+
 
 def get_expected_return(
         rewards: tf.Tensor, 
@@ -52,37 +60,58 @@ def compute_loss(
     return actor_loss + critic_loss
 
 
-@tf.function
-def train_step(
-        initial_state: tf.Tensor,
-        model: tf.keras.Model,
-        optimizer: tf.keras.optimizers.Optimizer,
-        gamma: float,
-        max_steps_per_episode: int) -> tf.Tensor:
-    """Runs a model training step."""
+class Trainer:
+    """Reinforcement learning trainer, govern everything about the agent's training"""
 
-    with tf.GradientTape() as tape:
+    def __init__(self, driver):
+        self.driver = driver
+        self.agent = Agent()
+        self.log_reader = LogReader()
+        self.recorder = TensorReader()
 
-        # Run the model for one episode to collect training data
-        action_probs, values, rewards = run_episode(
-            initial_state, model, max_steps_per_episode)
 
-        # Calculate expected returns
-        returns = get_expected_return(rewards, gamma)
+    def run_episode(self):
+        done = False
+        while not done:
+            for entry in self.driver.get_log("browser"):
+                params = self.log_reader.read(entry["message"])
+                if params:
+                    # Record and process parameters
+                    *state, reward, crash = list_to_tensor(params)
+                        
+                    # Agent will record the state and take an action
+                    self.agent.run(state, reward, self.recorder)
 
-        # Convert training data to appropriate TF tensor shapes
-        action_probs, values, returns = [
-            tf.expand_dims(x, 1) for x in [action_probs, values, returns]]
+                    if crash:
+                        action_probs, values, rewards = self.recorder.get_tensor()
+                        self.recorder.reset()
+                        done = True
+                        
+        return action_probs, values, rewards
 
-        # Calculating loss values to update our network
-        loss = compute_loss(action_probs, values, returns)
 
-    # Compute the gradients from the loss
-    grads = tape.gradient(loss, model.trainable_variables)
+    def train_batch(self):
 
-    # Apply the gradients to the model's parameters
-    optimizer.apply_gradients(zip(grads, model.trainable_variables))
+        with tf.GradientTape() as tape:
+            # Run one episode and get the values
+            action_probs, values, rewards = self.run_episode()
 
-    episode_reward = tf.math.reduce_sum(rewards)
+            # Calculate expected returns
+            returns = get_expected_return(rewards, config.GAMMA)
 
-    return episode_reward
+            # Convert training data to appropriate TF tensor shapes
+            action_probs, values, returns = [
+                tf.expand_dims(x, 1) for x in [action_probs, values, returns]]
+
+            # Calculating loss values to update our network
+            loss = compute_loss(action_probs, values, returns)
+
+        # Compute the gradients from the loss
+        grads = tape.gradient(loss, self.agent.model.trainable_variables)
+
+        # Apply the gradients to the model's parameters
+        optimizer.apply_gradients(zip(grads, self.agent.model.trainable_variables))
+
+        episode_reward = tf.math.reduce_sum(rewards)
+
+        return episode_reward

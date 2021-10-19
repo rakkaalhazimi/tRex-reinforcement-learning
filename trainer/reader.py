@@ -5,6 +5,7 @@ import tensorflow as tf
 
 
 class LogReader:
+    """Catch and parse incoming log message from browser"""
 
     def __init__(self):
         self.log_pattern = re.compile(r'"(.*)"')
@@ -23,6 +24,14 @@ class LogReader:
 
 
 class TensorReader:
+    """
+    Build dynamic-sized tensor that can be write per-time-step. It also support reset utility,
+    so that we have a clean tensor in every training episode.
+
+    Heavily rely on tf.TensorArray.
+
+    read about: tf.TensorArray for more information
+    """
     
     def __init__(self):
         self.index = 0
