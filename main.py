@@ -2,11 +2,7 @@
 import re
 import time
 import collections
-import logging
-logging.basicConfig(filename="logs/training.log",
-                    filemode="w",
-                    format="[%(levelname)s] %(asctime)s: %(message)s",
-                    level=logging.INFO)
+
 
 # 3rd-party library
 import keyboard
@@ -17,6 +13,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
 from utils import config  # config must go first
+from utils.logger import log_info, finish_log
 from trainer.train import Trainer
 
 
@@ -58,14 +55,14 @@ class MainApp:
             self.start_game()
             reward = self.trainer.train_batch()
             
-            logging.info(
-                "Finish episode {} for {}s with rewards: {}".format(episode, reward)
+            log_info(
+                "Finish episode {} with rewards: {}".format(episode, reward)
             )
 
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
-            
-
+        
+        finish_log()
         self.driver.close()
 
 
@@ -73,4 +70,5 @@ class MainApp:
 
 if __name__ == '__main__':
     app = MainApp()
+    
     
