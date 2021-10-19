@@ -68,7 +68,8 @@ class Agent:
         """Record state and do the action"""
         # Feed the state into model
         state = tf.reshape(tf.stack(state, axis=0), (1, -1))
-        action_probs, critics = self.model(state)
+        action, critics = self.model(state)
+        action_probs = tf.nn.softmax(action)
         
         # Perform action
         key = self.move(action_probs)
