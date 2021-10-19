@@ -2,7 +2,11 @@
 import re
 import time
 import collections
-from typing import List
+import logging
+logging.basicConfig(filename="logs/training.log",
+                    filemode="w",
+                    format="[%(levelname)s] %(asctime)s: %(message)s",
+                    level=logging.INFO)
 
 # 3rd-party library
 import keyboard
@@ -50,9 +54,13 @@ class MainApp:
         """Define what happens on the whole of application runtime"""
 
         for episode in range(config.EPISODES):
+            
             self.start_game()
             reward = self.trainer.train_batch()
-            print("Finish episode {} with rewards: {}".format(episode, reward))
+            
+            logging.info(
+                "Finish episode {} for {}s with rewards: {}".format(episode, reward)
+            )
 
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
