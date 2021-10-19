@@ -12,10 +12,10 @@ var reward = 1;
 // =========================
 
 // Obstacle width
-const getObsWidth = () => runner.horizon.obstacles[0].width;
+const getObsWidth = () => runner.horizon.obstacles[0].width / 1000;
 
 // Current game speed
-const getSpeed = () => Math.round(runner.currentSpeed * 100) / 100;
+const getSpeed = () => Math.round(runner.currentSpeed * 100) / 1000;
 
 // Set reward based on state
 const getReward = () => runner.crashed ? -10 : 1;
@@ -24,7 +24,7 @@ const getReward = () => runner.crashed ? -10 : 1;
 const getDistance = () => {
   let tRexPos = runner.tRex.xPos;
   let obsXPos = runner.horizon.obstacles[0].xPos;
-  return (obsXPos - tRexPos) / 100;
+  return (obsXPos - tRexPos) / 1000;
 }
 
 // Vertical gap between ground and obstacle
@@ -32,7 +32,7 @@ const getVGap = () => {
   const GROUND_YPOS = runner.dimensions.HEIGHT - runner.config.BOTTOM_PAD;
   let obstacleHeight = runner.horizon.obstacles[0].typeConfig.height;
   let obstacleYPos = runner.horizon.obstacles[0].yPos;
-  return GROUND_YPOS - (obstacleHeight + obstacleYPos)
+  return (GROUND_YPOS - (obstacleHeight + obstacleYPos)) / 1000
 }
 
 
