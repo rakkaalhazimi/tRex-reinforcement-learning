@@ -18,13 +18,13 @@ const getObsWidth = () => runner.horizon.obstacles[0].width;
 const getSpeed = () => Math.round(runner.currentSpeed * 100) / 100;
 
 // Set reward based on state
-const getReward = () => runner.crashed ? -1 / 10 : 1 / 100;
+const getReward = () => runner.crashed ? -10 : 1;
 
 // Distance between trex and obstacle
 const getDistance = () => {
   let tRexPos = runner.tRex.xPos;
   let obsXPos = runner.horizon.obstacles[0].xPos;
-  return obsXPos - tRexPos;
+  return (obsXPos - tRexPos) / 100;
 }
 
 // Vertical gap between ground and obstacle

@@ -1,7 +1,7 @@
 # Std library
-import os
 import re
-import contextlib
+import time
+import collections
 
 # 3rd-party library
 import keyboard
@@ -11,9 +11,10 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Local file
+from utils import config  # config must go first
 from trainer.model import ActorCritic
 from trainer.action import Action
-from utils import config
+from trainer.train import train_step
 
 
 def start_seed(seed: int):
@@ -41,11 +42,16 @@ class Agent:
     def __init__(self):
         self.model = ActorCritic(config.NUM_ACTS, config.UNITS)
         self.action = Action()
+        self.rewards = collections.deque(maxlen=config.MIN_CRITERION)
 
     def move(self, probs: tf.Tensor):
         key = int(tf.random.categorical(probs, 1)[0, 0])
-        print(key)
         self.action(key)
+
+    def update(self):
+        print("Updating agent...")
+        time.sleep(5)
+        keyboard.press_and_release("space")
 
 
 class LogReader:
@@ -79,10 +85,10 @@ class MainApp:
         self.loop()
 
     def loop(self):
-        done = False
+        episode = 0
         keyboard.press_and_release("space")
         
-        while not done:
+        while episode <= config.EPISODES:
             for entry in self.driver.get_log("browser"):
                 params = self.log_reader.read(entry["message"])
                 if params:
@@ -95,7 +101,8 @@ class MainApp:
                     self.agent.move(action_probs)
 
                     if crash:
-                        done = True
+                        episode += 1
+                        self.agent.update()
 
         self.driver.close()
 
