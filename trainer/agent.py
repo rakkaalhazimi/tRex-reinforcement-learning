@@ -60,7 +60,8 @@ class Agent:
 
     def move(self, probs: tf.Tensor):
         """Commit an action based on probability distribution of actions"""
-        key = int(tf.random.categorical(probs, 1)[0, 0])
+        # key = int(tf.random.categorical(probs, 1)[0, 0])
+        key = int(tf.argmax(probs, axis=1))
         self.action(key)
         return key
 
