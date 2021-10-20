@@ -56,7 +56,6 @@ def compute_loss(
     action_log_probs = tf.math.log(action_probs)
     actor_loss = -tf.math.reduce_sum(action_log_probs * advantage)
     critic_loss = huber_loss(values, returns)
-    print(actor_loss, critic_loss)
 
     return actor_loss + critic_loss
 
@@ -119,7 +118,6 @@ class Trainer:
 
             # Calculating loss values to update our network
             loss = compute_loss(action_probs, values, returns)
-            print(loss)
 
         if config.TRAIN:
             # Compute the gradients from the loss
@@ -133,4 +131,4 @@ class Trainer:
 
         episode_reward = tf.math.reduce_sum(rewards)
 
-        return episode_reward
+        return episode_reward, loss

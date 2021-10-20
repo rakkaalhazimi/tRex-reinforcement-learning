@@ -53,11 +53,11 @@ class MainApp:
         for episode in range(config.EPISODES):
             self.start_game()
 
-            reward = self.trainer.train_batch()
+            reward, loss = self.trainer.train_batch()
             
             # Record the rewards per episode
             log_info(
-                "Finish episode {} with rewards: {}".format(episode, reward)
+                "Finish episode {} with rewards: {} and loss: {}".format(episode, reward, loss)
             )
 
             # Pause before starting, so that the app has enough time to press space
