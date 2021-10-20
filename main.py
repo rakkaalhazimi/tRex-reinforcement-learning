@@ -57,13 +57,13 @@ class MainApp:
             
             # Record the rewards per episode
             log_info(
-                "Finish episode {} with rewards: {} and loss: {}".format(episode, reward, loss)
+                "Finish episode {} with rewards: {:.2f} and loss: {:>8}".format(episode, reward, loss)
             )
 
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
         
-        finish_log()
+        # finish_log()
         self.driver.close()
 
 

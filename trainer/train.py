@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipvalue=0.0001)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
@@ -108,7 +108,7 @@ class Trainer:
         with tf.GradientTape() as tape:
             # Run one episode and get the values
             action_probs, values, rewards = self.run_episode()
-
+            print(action_probs, values)
             # Calculate expected returns
             returns = get_expected_return(rewards, config.GAMMA)
 
@@ -118,6 +118,8 @@ class Trainer:
 
             # Calculating loss values to update our network
             loss = compute_loss(action_probs, values, returns)
+
+
 
         if config.TRAIN:
             # Compute the gradients from the loss

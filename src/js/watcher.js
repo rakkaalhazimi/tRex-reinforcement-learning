@@ -18,7 +18,7 @@ const getObsWidth = () => runner.horizon.obstacles[0].width / 1000;
 const getSpeed = () => Math.round(runner.currentSpeed * 100) / 1000;
 
 // Set reward based on state
-const getReward = () => runner.crashed ? -10 : 0.1;
+const getReward = () => runner.crashed ? -1 : 0.1;
 
 // Distance between trex and obstacle
 const getDistance = () => {
