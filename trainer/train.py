@@ -3,7 +3,7 @@ from typing import List
 
 import tensorflow as tf
 
-from .reader import LogReader, TensorReader
+from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
@@ -65,10 +65,18 @@ class Trainer:
     """Reinforcement learning trainer, govern everything about the agent's training"""
 
     def __init__(self, driver):
+        """Initiate agent, reader and checkpoint"""
         self.driver = driver
         self.agent = Agent()
         self.log_reader = LogReader()
         self.recorder = TensorReader()
+        self.checkpoint = CheckpointReader(model=self.agent.model, optimizer=optimizer)
+
+        # Check last checkpoint
+        self.last_ckpt = self.checkpoint.manager.latest_checkpoint
+        if self.last_ckpt:
+            self.checkpoint.ckpt.restore(self.last_ckpt)    
+
 
 
     def run_episode(self):
@@ -113,6 +121,9 @@ class Trainer:
 
         # Apply the gradients to the model's parameters
         optimizer.apply_gradients(zip(grads, self.agent.model.trainable_variables))
+
+        # Save model and optimizer checkpoints
+        self.checkpoint.manager.save()
 
         episode_reward = tf.math.reduce_sum(rewards)
 
