@@ -42,9 +42,9 @@ const getVGap = () => {
 var reportStarter
 
 function reportEnv() {
-  let distance = 0;
-  let width = 0;
-  let vgap = 0;
+  let distance = 0.0001;
+  let width = 0.0001;
+  let vgap = 0.0001;
   let speed = getSpeed();
   let reward = getReward()
   let collide = runner.crashed ? 1 : 0;
