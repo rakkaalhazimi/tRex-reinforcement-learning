@@ -52,7 +52,7 @@ function reportEnv() {
   if (runner.horizon.obstacles[0] != undefined) {
     distance = getDistance();
     width = getObsWidth();
-    vgap = getVGap();
+    vgap = getVGap() || 0.0001;
   }
 
   var report = `
@@ -76,8 +76,11 @@ function reportEnv() {
 }
 
 function startReport(event) {
-  if ([" ", "ArrowUp"].includes(event.key)) {
-    reportStarter = setInterval(reportEnv, 100);
+  if ([" "].includes(event.key)) {
+    setTimeout(() => {
+      reportStarter = setInterval(reportEnv, 100);
+    }, 500)
+    
   }
 }
 

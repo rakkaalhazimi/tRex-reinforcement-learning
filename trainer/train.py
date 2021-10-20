@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipvalue=1.0)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipvalue=1.0)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
@@ -75,6 +75,7 @@ class Trainer:
         # Check last checkpoint
         self.last_ckpt = self.checkpoint.manager.latest_checkpoint
         if self.last_ckpt:
+            print("Restore ckpt from: {}".format(self.last_ckpt))
             self.checkpoint.ckpt.restore(self.last_ckpt)    
 
 
@@ -114,7 +115,6 @@ class Trainer:
 
             # Calculating loss values to update our network
             loss = compute_loss(action_probs, values, returns)
-            print(loss)
 
         # Compute the gradients from the loss
         grads = tape.gradient(loss, self.agent.model.trainable_variables)

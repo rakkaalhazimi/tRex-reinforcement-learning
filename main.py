@@ -51,7 +51,6 @@ class MainApp:
         """Define what happens on the whole of application runtime"""
 
         for episode in range(config.EPISODES):
-            
             self.start_game()
             reward = self.trainer.train_batch()
             
