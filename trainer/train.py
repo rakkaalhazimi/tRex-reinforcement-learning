@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipvalue=1.0)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
@@ -56,6 +56,7 @@ def compute_loss(
     action_log_probs = tf.math.log(action_probs)
     actor_loss = -tf.math.reduce_sum(action_log_probs * advantage)
     critic_loss = huber_loss(values, returns)
+    print(actor_loss, critic_loss)
 
     return actor_loss + critic_loss
 
