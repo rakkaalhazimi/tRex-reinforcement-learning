@@ -65,7 +65,7 @@ class Agent:
         self.action(key)
         return key
 
-    def run(self, state: List[tf.Tensor], reward: tf.Tensor, recorder: TensorReader) -> List[tf.Tensor]:
+    def run(self, state: List[tf.Tensor], rewards: tf.Tensor, recorder: TensorReader) -> List[tf.Tensor]:
         """Record state and do the action"""
         # Feed the state into model
         state = tf.reshape(tf.stack(state, axis=0), (1, -1))
@@ -76,4 +76,6 @@ class Agent:
         key = self.move(action_probs)
 
         # Record all result tensor
-        recorder.record(action_probs[0, key], critics, reward)
+        recorder.record(action=action_probs[0, key], 
+                        values=tf.squeeze(critics), 
+                        rewards=rewards)

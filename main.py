@@ -52,8 +52,10 @@ class MainApp:
 
         for episode in range(config.EPISODES):
             self.start_game()
+
             reward = self.trainer.train_batch()
             
+            # Record the rewards per episode
             log_info(
                 "Finish episode {} with rewards: {}".format(episode, reward)
             )

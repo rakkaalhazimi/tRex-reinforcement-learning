@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipvalue=1.0)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipvalue=1.0)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
@@ -56,7 +56,6 @@ def compute_loss(
     action_log_probs = tf.math.log(action_probs)
     actor_loss = -tf.math.reduce_sum(action_log_probs * advantage)
     critic_loss = huber_loss(values, returns)
-    # print(actor_loss, critic_loss)
 
     return actor_loss + critic_loss
 
@@ -72,12 +71,16 @@ class Trainer:
         self.recorder = TensorReader()
         self.checkpoint = CheckpointReader(model=self.agent.model, optimizer=optimizer)
 
-        # Check last checkpoint
+        if config.CONTINUE:
+            self.restore_ckpt()
+
+
+    def restore_ckpt(self):
+        """Check and restore last checkpoint"""
         self.last_ckpt = self.checkpoint.manager.latest_checkpoint
         if self.last_ckpt:
             print("Restore ckpt from: {}".format(self.last_ckpt))
             self.checkpoint.ckpt.restore(self.last_ckpt)    
-
 
 
     def run_episode(self):
@@ -96,7 +99,7 @@ class Trainer:
                         action_probs, values, rewards = self.recorder.get_tensor()
                         self.recorder.reset()
                         done = True
-                        
+
         return action_probs, values, rewards
 
 
@@ -115,15 +118,17 @@ class Trainer:
 
             # Calculating loss values to update our network
             loss = compute_loss(action_probs, values, returns)
+            print(loss)
 
-        # Compute the gradients from the loss
-        grads = tape.gradient(loss, self.agent.model.trainable_variables)
+        if config.TRAIN:
+            # Compute the gradients from the loss
+            grads = tape.gradient(loss, self.agent.model.trainable_variables)
+           
+            # Apply the gradients to the model's parameters
+            optimizer.apply_gradients(zip(grads, self.agent.model.trainable_variables))
 
-        # Apply the gradients to the model's parameters
-        optimizer.apply_gradients(zip(grads, self.agent.model.trainable_variables))
-
-        # Save model and optimizer checkpoints
-        self.checkpoint.manager.save()
+            # Save model and optimizer checkpoints
+            self.checkpoint.manager.save()
 
         episode_reward = tf.math.reduce_sum(rewards)
 
