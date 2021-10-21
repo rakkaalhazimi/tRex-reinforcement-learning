@@ -27,6 +27,11 @@ const getDistance = () => {
   return (obsXPos - tRexPos) / 1000;
 }
 
+// Dino y-position
+const getDinoYPos = () => {
+  return runner.tRex.yPos / 1000
+}
+
 // Vertical gap between ground and obstacle
 const getVGap = () => {
   const GROUND_YPOS = runner.dimensions.HEIGHT - runner.config.BOTTOM_PAD;
@@ -40,26 +45,38 @@ const getVGap = () => {
 // Environment Report
 // =========================
 var reportStarter
+var distancePass = 0
 
 function reportEnv() {
-  let distance = 0.0001;
-  let width = 0.0001;
-  let vgap = 0.0001;
+  let distanceObs = 0;
+  let obsWidth = 0;
+  let dinoYPos = getDinoYPos();
+  let vgap = 0;
   let speed = getSpeed();
-  let reward = getReward()
+  let reward = getReward();
   let collide = runner.crashed ? 1 : 0;
 
+  // Add distance passed
+  distancePass += 0.1
+
+  // When see obstacle
   if (runner.horizon.obstacles[0] != undefined) {
-    distance = getDistance();
-    width = getObsWidth();
-    vgap = getVGap() || 0.0001;
+    distanceObs = getDistance();
+    obsWidth = getObsWidth();
+    vgap = getVGap();
+  }
+
+  // If you did pass the obstacle, give reward +1
+  if (distanceObs < 0) {
+    reward = 1;
   }
 
   var report = `
-    distance: ${distance}, 
+    distanceObs: ${distanceObs}, 
     speed: ${speed}, 
-    width: ${width}, 
-    vgap: ${vgap}, 
+    obsWidth: ${obsWidth},
+    dinoHeight: ${dinoYPos}, 
+    vgap: ${vgap},
     reward: ${reward}, 
     collide: ${collide}
   `
@@ -69,6 +86,8 @@ function reportEnv() {
 
   } else if (runner.crashed) {
     console.log(report);
+
+    distancePass = 0                                   // Reset distance passed
     clearInterval(reportStarter);                      // Clear interval
     window.addEventListener("keypress", startReport);  // Register new event to start interval again
 
@@ -77,6 +96,8 @@ function reportEnv() {
 
 function startReport(event) {
   if ([" "].includes(event.key)) {
+    
+    window.removeEventListener("keypress", startReport);
     setTimeout(() => {
       reportStarter = setInterval(reportEnv, 100);
     }, 500)

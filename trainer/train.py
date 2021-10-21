@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipvalue=0.0001)
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipvalue=0.0001)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
@@ -70,7 +70,7 @@ class Trainer:
         self.log_reader = LogReader()
         self.recorder = TensorReader()
         self.checkpoint = CheckpointReader(model=self.agent.model, optimizer=optimizer)
-
+        
         if config.CONTINUE:
             self.restore_ckpt()
 
@@ -108,7 +108,7 @@ class Trainer:
         with tf.GradientTape() as tape:
             # Run one episode and get the values
             action_probs, values, rewards = self.run_episode()
-            print(action_probs, values)
+
             # Calculate expected returns
             returns = get_expected_return(rewards, config.GAMMA)
 

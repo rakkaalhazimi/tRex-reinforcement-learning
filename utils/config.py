@@ -10,6 +10,6 @@ CONTINUE = False
 NUM_ACTS = 3
 UNITS = 128
 PARAM_NUM = 6
-EPISODES = 10
+EPISODES = 50
 GAMMA = 0.99
 EPS = np.finfo(np.float32).eps.item()
