@@ -45,7 +45,7 @@ const getVGap = () => {
   const GROUND_YPOS = runner.dimensions.HEIGHT - runner.config.BOTTOM_PAD;
   let obstacleHeight = runner.horizon.obstacles[0].typeConfig.height;
   let obstacleYPos = runner.horizon.obstacles[0].yPos;
-  return (GROUND_YPOS - (obstacleHeight + obstacleYPos)) / 1000
+  return (GROUND_YPOS - (obstacleHeight + obstacleYPos)) / 100
 }
 
 
