@@ -44,20 +44,18 @@ class TensorReader:
     def __init__(self):
         self.index = 0
         self.action_probs = self.build_tensor()
-        self.values = self.build_tensor()
         self.rewards = self.build_tensor()
         
     def build_tensor(self):
         return tf.TensorArray(dtype=tf.float32, size=0, dynamic_size=True)
 
-    def record(self, action, values, rewards):
+    def record(self, action, rewards):
         self.action_probs = self.action_probs.write(self.index, action)
-        self.values = self.values.write(self.index, values)
         self.rewards = self.rewards.write(self.index, rewards)
         self.index += 1
 
     def get_tensor(self):
-        return self.action_probs.stack(), self.values.stack(), self.rewards.stack()
+        return self.action_probs.stack(), self.rewards.stack()
 
     def reset(self):
         self.__init__()

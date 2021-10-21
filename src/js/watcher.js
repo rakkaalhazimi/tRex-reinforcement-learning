@@ -12,24 +12,32 @@ var reward = 1;
 // =========================
 
 // Obstacle width
-const getObsWidth = () => runner.horizon.obstacles[0].width / 1000;
+const getObsWidth = () => runner.horizon.obstacles[0].width / 100;
 
 // Current game speed
 const getSpeed = () => Math.round(runner.currentSpeed * 100) / 1000;
 
 // Set reward based on state
-const getReward = () => runner.crashed ? -1000 : 0.;
+const getReward = () => {
+  if (runner.crashed) {
+    rewards -= 10
+  } else {
+    rewards += 0.1
+  }
+
+  return Math.round(rewards * 100) / 100
+};
 
 // Distance between trex and obstacle
 const getDistance = () => {
   let tRexPos = runner.tRex.xPos;
   let obsXPos = runner.horizon.obstacles[0].xPos;
-  return (obsXPos - tRexPos) / 1000;
+  return (obsXPos - tRexPos) / 100;
 }
 
 // Dino y-position
 const getDinoYPos = () => {
-  return runner.tRex.yPos / 1000
+  return runner.tRex.yPos / 100
 }
 
 // Vertical gap between ground and obstacle
@@ -45,6 +53,7 @@ const getVGap = () => {
 // Environment Report
 // =========================
 var reportStarter
+var rewards = 0
 
 function reportEnv() {
   let distanceObs = 0;
@@ -52,7 +61,7 @@ function reportEnv() {
   let dinoYPos = getDinoYPos();
   let vgap = 0;
   let speed = getSpeed();
-  let reward = getReward();
+  rewards = getReward();
   let collide = runner.crashed ? 1 : 0;
 
 
@@ -69,16 +78,16 @@ function reportEnv() {
     obsWidth: ${obsWidth},
     dinoHeight: ${dinoYPos}, 
     vgap: ${vgap},
-    reward: ${reward}, 
+    reward: ${rewards}, 
     collide: ${collide}
   `
 
-  if (runner.playing && distanceObs) {
+  if (runner.playing) {
     console.log(report);
 
   } else if (runner.crashed) {
     console.log(report);
-
+    rewards = 0                                        // Reset rewards
     clearInterval(reportStarter);                      // Clear interval
     window.addEventListener("keypress", startReport);  // Register new event to start interval again
 

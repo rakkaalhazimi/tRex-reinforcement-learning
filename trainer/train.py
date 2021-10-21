@@ -1,6 +1,7 @@
 from __main__ import config
 from typing import List
 
+import numpy as np
 import tensorflow as tf
 
 from .reader import LogReader, TensorReader, CheckpointReader
@@ -47,17 +48,13 @@ def get_expected_return(
 
 def compute_loss(
         action_probs: tf.Tensor, 
-        values: tf.Tensor, 
         returns: tf.Tensor) -> tf.Tensor:
     """Computes the combined actor-critic loss."""
 
-    advantage = returns - values
-
     action_log_probs = tf.math.log(action_probs)
-    actor_loss = -tf.math.reduce_sum(action_log_probs * advantage)
-    critic_loss = huber_loss(values, returns)
+    actor_loss = -tf.math.reduce_sum(action_log_probs * returns)
 
-    return actor_loss + critic_loss
+    return actor_loss
 
 
 class Trainer:
@@ -96,28 +93,28 @@ class Trainer:
                     self.agent.run(state, reward, self.recorder)
 
                     if crash:
-                        action_probs, values, rewards = self.recorder.get_tensor()
+                        action_probs, rewards = self.recorder.get_tensor()
                         self.recorder.reset()
                         done = True
 
-        return action_probs, values, rewards
+        return action_probs, rewards
 
 
     def train_batch(self):
 
         with tf.GradientTape() as tape:
             # Run one episode and get the values
-            action_probs, values, rewards = self.run_episode()
+            action_probs, rewards = self.run_episode()
 
             # Calculate expected returns
             returns = get_expected_return(rewards, config.GAMMA)
 
             # Convert training data to appropriate TF tensor shapes
-            action_probs, values, returns = [
-                tf.expand_dims(x, 1) for x in [action_probs, values, returns]]
+            action_probs, returns = [
+                tf.expand_dims(x, 1) for x in [action_probs, returns]]
 
             # Calculating loss values to update our network
-            loss = compute_loss(action_probs, values, returns)
+            loss = compute_loss(action_probs, returns)
 
 
 
@@ -133,4 +130,4 @@ class Trainer:
 
         episode_reward = tf.math.reduce_sum(rewards)
 
-        return episode_reward, returns
+        return episode_reward, loss
