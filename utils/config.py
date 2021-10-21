@@ -4,13 +4,13 @@ import numpy as np
 SERVER = "http://localhost:5500/"
 SEED = 42
 TRAIN = True
-CONTINUE = True
+CONTINUE = False
 
 # Training parameter
 NUM_ACTS = 3
 UNITS = 128
 PARAM_NUM = 6
-EPISODES = 5
-LEARNING_RATE = 1e-3
+EPISODES = 50
+LEARNING_RATE = 1e-4
 GAMMA = 0.99
 EPS = np.finfo(np.float32).eps.item()

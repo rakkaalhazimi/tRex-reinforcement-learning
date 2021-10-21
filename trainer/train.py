@@ -133,4 +133,4 @@ class Trainer:
 
         episode_reward = tf.math.reduce_sum(rewards)
 
-        return episode_reward, loss
+        return episode_reward, returns
