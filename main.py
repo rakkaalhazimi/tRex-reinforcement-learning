@@ -50,6 +50,9 @@ class MainApp:
     def loop(self):
         """Define what happens on the whole of application runtime"""
 
+        # Wait for page to fully loaded
+        time.sleep(1)
+
         for episode in range(config.EPISODES):
             self.start_game()
 
@@ -63,7 +66,7 @@ class MainApp:
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
         
-        # finish_log()
+        finish_log()
         self.driver.close()
 
 

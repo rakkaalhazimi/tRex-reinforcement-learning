@@ -18,7 +18,7 @@ const getObsWidth = () => runner.horizon.obstacles[0].width / 1000;
 const getSpeed = () => Math.round(runner.currentSpeed * 100) / 1000;
 
 // Set reward based on state
-const getReward = () => runner.crashed ? -1 : 0.1;
+const getReward = () => runner.crashed ? -10 : 0.1;
 
 // Distance between trex and obstacle
 const getDistance = () => {
@@ -45,7 +45,6 @@ const getVGap = () => {
 // Environment Report
 // =========================
 var reportStarter
-var distancePass = 0
 
 function reportEnv() {
   let distanceObs = 0;
@@ -56,19 +55,12 @@ function reportEnv() {
   let reward = getReward();
   let collide = runner.crashed ? 1 : 0;
 
-  // Add distance passed
-  distancePass += 0.1
 
   // When see obstacle
   if (runner.horizon.obstacles[0] != undefined) {
     distanceObs = getDistance();
     obsWidth = getObsWidth();
     vgap = getVGap();
-  }
-
-  // If you did pass the obstacle, give reward +1
-  if (distanceObs < 0) {
-    reward = 1;
   }
 
   var report = `
@@ -81,13 +73,12 @@ function reportEnv() {
     collide: ${collide}
   `
 
-  if (runner.playing) {
+  if (runner.playing && distanceObs) {
     console.log(report);
 
   } else if (runner.crashed) {
     console.log(report);
 
-    distancePass = 0                                   // Reset distance passed
     clearInterval(reportStarter);                      // Clear interval
     window.addEventListener("keypress", startReport);  // Register new event to start interval again
 
@@ -100,7 +91,7 @@ function startReport(event) {
     window.removeEventListener("keypress", startReport);
     setTimeout(() => {
       reportStarter = setInterval(reportEnv, 100);
-    }, 500)
+    }, 200)
     
   }
 }

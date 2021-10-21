@@ -7,7 +7,7 @@ from .reader import LogReader, TensorReader, CheckpointReader
 from .agent import Agent
 
 
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, clipvalue=0.0001)
+optimizer = tf.keras.optimizers.Adam(learning_rate=config.LEARNING_RATE, clipvalue=0.0001)
 huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 

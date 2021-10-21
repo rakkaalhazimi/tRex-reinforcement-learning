@@ -42,14 +42,12 @@ class ActorCritic(tf.keras.Model):
         """Initialize."""
         super().__init__()
 
-        self.fc1 = layers.Dense(num_hidden_units, activation="relu")
-        self.fc2 = layers.Dense(num_hidden_units / 2, activation="relu")
+        self.common = layers.Dense(num_hidden_units, activation="relu")
         self.actor = layers.Dense(num_actions)
         self.critic = layers.Dense(1)
 
     def call(self, inputs: tf.Tensor) -> Tuple[tf.Tensor, tf.Tensor]:
-        x = self.fc1(inputs)
-        x = self.fc2(x)
+        x = self.common(inputs)
         return self.actor(x), self.critic(x)
 
 
