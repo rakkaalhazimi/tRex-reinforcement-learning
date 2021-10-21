@@ -43,8 +43,8 @@ class ActorCritic(tf.keras.Model):
         super().__init__()
 
         self.common = layers.Dense(num_hidden_units, activation="relu")
-        self.actor = layers.Dense(num_actions)
-        self.critic = layers.Dense(1)
+        self.actor = layers.Dense(num_actions, activation="softmax", name="actor")
+        self.critic = layers.Dense(1 ,name="critic")
 
     def call(self, inputs: tf.Tensor) -> Tuple[tf.Tensor, tf.Tensor]:
         x = self.common(inputs)
@@ -70,12 +70,11 @@ class Agent:
         # Feed the state into model
         state = tf.reshape(tf.stack(state, axis=0), (1, -1))
         action, critics = self.model(state)
-        action_probs = tf.nn.softmax(action)
         
         # Perform action
         key = self.move(action)
 
         # Record all result tensor
-        recorder.record(action=action_probs[0, key], 
-                        values=tf.squeeze(critics), 
+        recorder.record(action=action[0, key], 
+                        values=tf.squeeze(critics),
                         rewards=rewards)
