@@ -63,6 +63,7 @@ function reportEnv() {
   let speed = getSpeed();
   rewards = getReward();
   let collide = runner.crashed ? 1 : 0;
+  let isStart = runner.runningTime > 3000;
 
 
   // When see obstacle
@@ -82,7 +83,7 @@ function reportEnv() {
     collide: ${collide}
   `
 
-  if (runner.playing && distanceObs) {
+  if (runner.playing && isStart) {
     console.log(report);
 
   } else if (runner.crashed) {
