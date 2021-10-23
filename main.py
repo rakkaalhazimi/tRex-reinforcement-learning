@@ -50,7 +50,7 @@ class MainApp:
     def loop(self):
         """Define what happens on the whole of application runtime"""
 
-        model_ckpt = 0
+        model_ckpt = 1
         if config.CONTINUE:
             model_ckpt = int(self.trainer.last_ckpt.split("-")[-1])
 

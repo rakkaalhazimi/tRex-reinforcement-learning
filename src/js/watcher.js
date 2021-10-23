@@ -6,6 +6,8 @@ var tRexDist = 0;
 var obsWidth = 0;
 var obsVGap = 0;
 var reward = 1;
+var episode = 1
+var attempt = document.getElementById("attempt")
 
 
 // Environtment state getter
@@ -89,6 +91,7 @@ function reportEnv() {
   } else if (runner.crashed) {
     console.log(report);
     rewards = 0                                        // Reset rewards
+    
     clearInterval(reportStarter);                      // Clear interval
     window.addEventListener("keypress", startReport);  // Register new event to start interval again
 
@@ -97,8 +100,10 @@ function reportEnv() {
 
 function startReport(event) {
   if ([" "].includes(event.key)) {
-    
-    window.removeEventListener("keypress", startReport);
+
+    episode++                                          // Count and update episode
+    attempt.innerHTML = `Attempt: ${episode}`
+    window.removeEventListener("keypress", startReport);  // Remove event
     setTimeout(() => {
       reportStarter = setInterval(reportEnv, 100);
     }, 200)
