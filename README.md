@@ -20,6 +20,7 @@ Python side-libraries:
 * Selenium
 * Keyboard
 * Tensorflow
+* Numpy
 
 Web-Driver for Selenium:
 * Chrome
