@@ -5,11 +5,11 @@ import tensorflow as tf
 
 
 class CheckpointReader:
-
+    """Tensorflow checkpoint manager"""
     def __init__(self, **kwargs):
         self.ckpt = tf.train.Checkpoint(**kwargs)
         self.path = "./checkpoints/"
-        self.manager = tf.train.CheckpointManager(self.ckpt, self.path, max_to_keep=500)
+        self.manager = tf.train.CheckpointManager(self.ckpt, self.path, max_to_keep=config.MAX_KEEP_CKPT)
 
 
 class LogReader:
@@ -17,7 +17,7 @@ class LogReader:
 
     def __init__(self):
         self.log_pattern = re.compile(r'"(.*)"')
-        self.params_pattern = re.compile(r"[0-9\.-]+")
+        self.params_pattern = re.compile(r"-?[0-9\.]+")
 
     def read(self, message: str):
         """

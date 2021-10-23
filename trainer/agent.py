@@ -35,8 +35,8 @@ class Action:
 
 
 
-class ActorCritic(tf.keras.Model):
-    """Combined actor-critic network."""
+class PolicyGradient(tf.keras.Model):
+    """Policy Gradient model that map state into probs of actions."""
 
     def __init__(self, num_actions: int, num_hidden_units: int):
         """Initialize."""
@@ -54,7 +54,7 @@ class Agent:
     """An agent that we need to improve from continuous time of training."""
 
     def __init__(self):
-        self.model = ActorCritic(config.NUM_ACTS, config.UNITS)
+        self.model = PolicyGradient(config.NUM_ACTS, config.UNITS)
         self.action = Action()
 
     def move(self, probs: tf.Tensor):

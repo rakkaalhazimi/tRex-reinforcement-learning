@@ -1,11 +1,7 @@
 import { runner } from "./index.js";
 
-// Parameters
+// DOM element
 // ========================
-var tRexDist = 0;
-var obsWidth = 0;
-var obsVGap = 0;
-var reward = 1;
 var episode = 1
 var attempt = document.getElementById("attempt")
 
@@ -101,7 +97,7 @@ function reportEnv() {
 function startReport(event) {
   if ([" "].includes(event.key)) {
 
-    episode++                                          // Count and update episode
+    episode++                                             // Count and update episode
     attempt.innerHTML = `Attempt: ${episode}`
     window.removeEventListener("keypress", startReport);  // Remove event
     setTimeout(() => {

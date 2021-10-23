@@ -56,8 +56,11 @@ To make this project runs well on your machine, what you need to do is:
    Match the driver with your Chrome version, after you download it, move the driver in
    your current directory (repo directory / same level with main.py).
 
-4. **Start the code**
-   
+4. **Start your local server to serve** `index.html`  
+   You can use live server from VS-Code or anything else. Then copy your localhost link like `http://127.0.0.1:5500/`
+   to the `CONFIG` variable in `utils/config.py` file.
+
+5. **Start the program**
    The main file is `main.py`, run this file to start the program.
    ```
    python main.py
@@ -66,6 +69,7 @@ To make this project runs well on your machine, what you need to do is:
 # Configuration
 You can update or change the settings and hyperparameter in the `utils/config.py` file.  
 Hyperparameter that you must know:
+- `SERVER`: Your local server link to be redirected by the webdriver
 - `TRAIN` : Whether or not you want to train the model
 - `CONTINUE`: Whether or not you want to continue from the model checkpoints
 - `EPISODES`: The number of episodes you want to run

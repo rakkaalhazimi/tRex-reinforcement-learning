@@ -48,7 +48,7 @@ def get_expected_return(
 def compute_loss(
         action_probs: tf.Tensor, 
         returns: tf.Tensor) -> tf.Tensor:
-    """Computes the combined actor-critic loss."""
+    """Multiply log-probabilities with the expected returns."""
 
     action_log_probs = tf.math.log(action_probs)
     actor_loss = -tf.math.reduce_sum(action_log_probs * returns)

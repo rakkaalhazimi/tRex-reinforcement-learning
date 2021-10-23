@@ -50,6 +50,7 @@ class MainApp:
     def loop(self):
         """Define what happens on the whole of application runtime"""
 
+        # Initiate episode number for logging purpose
         model_ckpt = 1
         if config.CONTINUE:
             model_ckpt = int(self.trainer.last_ckpt.split("-")[-1])
@@ -57,6 +58,7 @@ class MainApp:
         # Wait for page to fully loaded
         time.sleep(1)
 
+        # Main system loop
         for episode in range(config.EPISODES):
 
             self.start_game()
@@ -72,6 +74,7 @@ class MainApp:
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
         
+        # Upon completion, log everything and close the webdriver
         finish_log()
         self.driver.close()
 
