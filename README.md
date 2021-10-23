@@ -41,7 +41,7 @@ To make this project runs well on your machine, what you need to do is:
    ```
    Then install all the dependencies using:
    ```
-   pip install selenium, keyboard, tensorflow
+   pip install selenium, keyboard, tensorflow, numpy
    ```
    You can jump right into installing the dependencies if you already have python
    and venv intact.
@@ -63,13 +63,20 @@ To make this project runs well on your machine, what you need to do is:
    python main.py
    ```
 
-# Current Status
-It's still under-development though, so I'm afraid you couldn't do much here.
+# Configuration
+You can update or change the settings and hyperparameter in the `utils/config.py` file.  
+Hyperparameter that you must know:
+- `TRAIN` : Whether or not you want to train the model
+- `CONTINUE`: Whether or not you want to continue from the model checkpoints
+- `EPISODES`: The number of episodes you want to run
 
 # Training Note:
-How I train this dino agent:
-1. Go for `10 Episodes` with `1e-3 Learning Rate`
-2. Go for the rest with `1e-6 Learning Rate`
+How do I train this dino agent:
+1. Go for `100 - 500 Episodes` with `1e-2 Learning Rate`
+2. Set the `max reward = 500.000`
+
+# Model Used
+Regular [policy gradient](https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html) method
 
 # Main Idea
 I try to make a reinforcement learning project with the in-game parameters. Other peoples are likely to snipe the screen pixel or taking multiple screenshot to gain the parameters of the state. Therefore, I would like to try different approach by peeking the game-code and get its variable. It's much faster and memory-friendly. The rest is still the same, the approach, model and etc.  
