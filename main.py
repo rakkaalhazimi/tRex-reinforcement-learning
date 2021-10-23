@@ -50,18 +50,24 @@ class MainApp:
     def loop(self):
         """Define what happens on the whole of application runtime"""
 
+        model_ckpt = 0
+        if config.CONTINUE:
+            model_ckpt = int(self.trainer.last_ckpt.split("-")[-1])
+
         # Wait for page to fully loaded
         time.sleep(1)
 
         for episode in range(config.EPISODES):
-            self.start_game()
 
+            self.start_game()
             reward, loss = self.trainer.train_batch()
             
             # Record the rewards per episode
             log_info(
-                "Finish episode {} with rewards: {:.2f} and loss: {:>8}".format(episode, reward, loss)
+                "Finish episode {} with rewards: {:.2f} and loss: {:>8}".format(episode + model_ckpt, reward, loss)
             )
+            if reward > config.MAX_REWARDS:
+                break
 
             # Pause before starting, so that the app has enough time to press space
             time.sleep(2)
