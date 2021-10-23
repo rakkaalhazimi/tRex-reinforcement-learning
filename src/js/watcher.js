@@ -20,7 +20,7 @@ const getSpeed = () => Math.round(runner.currentSpeed * 100) / 1000;
 // Set reward based on state
 const getReward = () => {
   if (runner.crashed) {
-    rewards -= 10
+    rewards -= 100
   } else {
     rewards += 0.1
   }
@@ -82,7 +82,7 @@ function reportEnv() {
     collide: ${collide}
   `
 
-  if (runner.playing) {
+  if (runner.playing && distanceObs) {
     console.log(report);
 
   } else if (runner.crashed) {

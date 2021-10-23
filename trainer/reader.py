@@ -9,7 +9,7 @@ class CheckpointReader:
     def __init__(self, **kwargs):
         self.ckpt = tf.train.Checkpoint(**kwargs)
         self.path = "./checkpoints/"
-        self.manager = tf.train.CheckpointManager(self.ckpt, self.path, max_to_keep=5)
+        self.manager = tf.train.CheckpointManager(self.ckpt, self.path, max_to_keep=10)
 
 
 class LogReader:

@@ -9,7 +9,6 @@ from .agent import Agent
 
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=config.LEARNING_RATE)
-huber_loss = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.SUM)
 
 
 def list_to_tensor(seq: List[str]):
