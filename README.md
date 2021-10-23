@@ -54,7 +54,7 @@ To make this project runs well on your machine, what you need to do is:
 3. **Download webdriver for chrome** [here](https://sites.google.com/chromium.org/driver/)
    
    Match the driver with your Chrome version, after you download it, move the driver in
-   your current directory (repo directory).
+   your current directory (repo directory / same level with main.py).
 
 4. **Start the code**
    
